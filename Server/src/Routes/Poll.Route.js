@@ -18,6 +18,7 @@ router.post("/polls", async (req, res) => {
             options: options.map((option) => ({
                 text: option,
             })),
+            options
         });
 
         await poll.save();
@@ -40,4 +41,43 @@ router.get("/polls", async (req, res) => {
     }
 });
 
+router.post("/polls/:id/vote", async (req, res) => {
+    try {
+        const { optionIndex } = req.body;
+        
+        const poll = await Poll.findById(req.params.id);
+
+        if(optionIndex<0 ||optionIndex>=poll.options.length){
+        return res.status(500).json({ message: "Invalid Option" });
+
+        }
+
+        poll.options[optionIndex].voters += 1;
+
+        poll.totalVotes += 1;
+
+        await poll.save();
+
+        res.status(201).json({
+            poll,
+        });
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+});
+
+router.get("/polls/:id", async (req, res) => {
+    try {
+        const polls = await Poll.findById(req.params.id);
+        if (!polls) {
+            return res
+                .status(500)
+                .json({ message: "No polls are found by this id" });
+        }
+
+        res.json(polls);
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+});
 module.exports = router;

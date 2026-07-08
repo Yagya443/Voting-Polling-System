@@ -9,6 +9,10 @@ const OptionSchema = new mongoose.Schema({
         type: Number,
         default: 0,
     },
+    totalVotes: {
+        type: Number,
+        default: 0,
+    },
 });
 const PollSchema = new mongoose.Schema(
     {
