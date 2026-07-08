@@ -2,6 +2,7 @@ require('dotenv').config()
 
 const express=require('express')
 const http=require('http')
+const PollRoute=require('./src/Routes/Poll.Route')
 const {Server}=require('socket.io')
 const cors=require('cors')
 const connectDB=require('./src/db.js')
@@ -15,6 +16,7 @@ const io=new Server(httpServer,{
 })
 
 app.use(express.json())
+app.use('/api',PollRoute)
 
 connectDB()
 
