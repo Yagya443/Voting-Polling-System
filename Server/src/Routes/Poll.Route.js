@@ -3,11 +3,41 @@ const router = express.Router();
 
 const Poll = require("../Model/Poll.model");
 
-router.get("/polls", async (req, res) => {
+router.post("/polls", async (req, res) => {
     try {
-        const polls = await Poll.find().toSorted(-1);
-        res.json(polls)
+        const { question, options } = req.body;
+
+        if (!question || !options) {
+            return res.status(400).json({
+                message: "Question and options are required.",
+            });
+        }
+
+        const poll = new Poll({
+            question,
+            options: options.map((option) => ({
+                text: option,
+            })),
+        });
+
+        await poll.save();
+
+        res.status(201).json({
+            poll,
+            message: "Poll created successfully.",
+        });
     } catch (error) {
         return res.status(500).json({ message: error.message });
     }
 });
+
+router.get("/polls", async (req, res) => {
+    try {
+        const polls = await Poll.find().sort({ createdAt: -1 });
+        res.json(polls);
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+});
+
+module.exports = router;

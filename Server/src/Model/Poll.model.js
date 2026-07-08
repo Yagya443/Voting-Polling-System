@@ -1,4 +1,4 @@
-const mongoose = require("require");
+const mongoose = require("mongoose");
 
 const OptionSchema = new mongoose.Schema({
     text: {
@@ -7,20 +7,20 @@ const OptionSchema = new mongoose.Schema({
     },
     voters: {
         type: Number,
-        default: true,
+        default: 0,
     },
 });
 const PollSchema = new mongoose.Schema(
     {
-        questions: {
+        question: {
             type: String,
             required: true,
         },
         options: {
-            type: [optionSchema],
+            type: [OptionSchema],
             required: true,
-            validator: {
-                validate: (e) => e.length > 1 && e.length < 5,
+            validate: {
+                validator: (e) => e.length > 1 && e.length < 5,
                 message: "A Poll Must Have Between 2 to 4 Options",
             },
         },
@@ -29,6 +29,4 @@ const PollSchema = new mongoose.Schema(
         timestamps: true,
     },
 );
-
-// module.exports={OptionSchema,PollSchema}
 module.exports = mongoose.model("Poll", PollSchema);
