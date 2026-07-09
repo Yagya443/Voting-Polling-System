@@ -1,9 +1,15 @@
 import { useState } from "react";
 import styles from "../Styles/CreatePage.module.css";
+import { ClipLoader } from "react-spinners";
+import axios from "axios";
+import { useNavigate } from 'react-router-dom';
 
 const CreatePoll = () => {
     const [question, setQuestion] = useState("");
     const [options, setOptions] = useState(["", ""]);
+    const [error, setError] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     const handleOptionChange = (index, value) => {
         const updatedOptions = [...options];
@@ -26,75 +32,58 @@ const CreatePoll = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
 
         try {
-            const response = await fetch(
+            const response = await axios.post(
                 "http://localhost:5000/api/polls",
                 {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        question,
-                        options,
-                    }),
-                }
+                    question,
+                    options,
+                },
             );
-
-            const data = await response.json();
-
-            alert(data.message);
 
             setQuestion("");
             setOptions(["", ""]);
+            setError(false);
+            navigate('/')
         } catch (error) {
+            setError(true);
             console.log(error);
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
         <div className={styles.container}>
-            <form
-                className={styles.card}
-                onSubmit={handleSubmit}
-            >
+            <form className={styles.card} onSubmit={handleSubmit}>
                 <h1>Create Poll</h1>
 
                 <input
                     type="text"
                     placeholder="Enter Poll Question"
                     value={question}
-                    onChange={(e) =>
-                        setQuestion(e.target.value)
-                    }
+                    onChange={(e) => setQuestion(e.target.value)}
                     required
                 />
 
                 {options.map((option, index) => (
-                    <div
-                        key={index}
-                        className={styles.optionRow}
-                    >
+                    <div key={index} className={styles.optionRow}>
                         <input
                             type="text"
                             placeholder={`Option ${index + 1}`}
                             value={option}
-                            onChange={(e) =>
-                                handleOptionChange(
-                                    index,
-                                    e.target.value
-                                )
-                            }
                             required
+                            onChange={(e) =>
+                                handleOptionChange(index, e.target.value)
+                            }
                         />
 
                         {options.length > 2 && (
                             <button
                                 type="button"
-                                onClick={() =>
-                                    removeOption(index)
-                                }
+                                onClick={() => removeOption(index)}
                             >
                                 ✕
                             </button>
@@ -111,12 +100,22 @@ const CreatePoll = () => {
                         + Add Option
                     </button>
                 )}
+                {error && (
+                    <span className={styles.errorMessage}>
+                        ⚠️Something went Wrong. Please try again later
+                    </span>
+                )}
 
                 <button
                     type="submit"
                     className={styles.submitBtn}
+                    disabled={loading}
                 >
-                    Create Poll
+                    {loading ? (
+                        <ClipLoader color="#fff" size={20} />
+                    ) : (
+                        "Create Poll"
+                    )}
                 </button>
             </form>
         </div>

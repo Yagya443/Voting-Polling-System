@@ -14,13 +14,17 @@ const PollModel = require("./src/Model/Poll.model.js");
 
 const io = new Server(httpServer, {
     cors: {
-        origin: "http://localhost:5000/",
+        origin: "http://localhost:5173/",
     },
 });
+app.use(cors({
+    origin: "http://localhost:5173",
+}));
 
 app.use(express.json());
 app.use("/api", pollRoute);
 connectDB();
+
 
 io.on("connection", (socket) => {
     console.log(`client connected ${socket.id}`);
@@ -54,6 +58,6 @@ io.on("connection", (socket) => {
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-    console.log(`Server is started ${process.env.PORT}`);
+httpServer.listen(PORT, () => {
+    console.log(`Server started on ${PORT}`);
 });

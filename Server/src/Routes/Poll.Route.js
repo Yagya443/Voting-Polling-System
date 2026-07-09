@@ -18,7 +18,6 @@ router.post("/polls", async (req, res) => {
             options: options.map((option) => ({
                 text: option,
             })),
-            options
         });
 
         await poll.save();
