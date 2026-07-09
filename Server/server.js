@@ -1,28 +1,59 @@
-require('dotenv').config()
+require("dotenv").config();
 
-const express=require('express')
-const http=require('http')
-const {Server}=require('socket.io')
-const cors=require('cors')
-const connectDB=require('./src/db.js')
-const pollRoute=require('./src/Routes/Poll.Route.js')
-const app=express()
-const httpServer=http.createServer(app)
+const express = require("express");
+const app = express();
 
-const io=new Server(httpServer,{
-    cors:{
-        origin:'http://localhost:5000/'
-    }
-})
+const http = require("http");
+const httpServer = http.createServer(app);
+const { Server } = require("socket.io");
+const cors = require("cors");
 
-app.use(express.json())
-app.use('/api',pollRoute    )
+const connectDB = require("./src/db.js");
+const pollRoute = require("./src/Routes/Poll.Route.js");
+const PollModel = require("./src/Model/Poll.model.js");
 
-connectDB()
+const io = new Server(httpServer, {
+    cors: {
+        origin: "http://localhost:5000/",
+    },
+});
 
-const PORT=process.env.PORT||5000
+app.use(express.json());
+app.use("/api", pollRoute);
+connectDB();
 
-app.listen(PORT,()=>{
-    console.log(`Server is started ${process.env.PORT}`  );
-    
-})
+io.on("connection", (socket) => {
+    console.log(`client connected ${socket.id}`);
+
+    socket.on("joinPoll", (pollId) => {
+        socket.join(pollId);
+        console.log(` joined room ${pollId}`);
+    });
+
+    socket.on("submitVote", async ({ pollId, optionIndex }) => {
+        try {
+            const poll = await PollModel.findById(pollId);
+
+            if (!poll) return;
+
+            poll.options[optionIndex].voters += 1;
+            poll.totalVotes += 1;
+            await poll.save();
+
+            io.to(pollId).emit("pollUpdated", poll);
+        
+        } catch (error) {
+            console.log("vote error by socket");
+        }
+    });
+
+    socket.on("disconnect", () => {
+        console.log(` Diconnected ${socket.id}`);
+    });
+});
+
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+    console.log(`Server is started ${process.env.PORT}`);
+});
