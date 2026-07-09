@@ -5,8 +5,7 @@
     padding: 18px 40px;
     background-color: var(--text-primary);
     box-shadow: var(--shadow-sm);
-    position: fixed;
-    min-width: 100vw;
+    
 }
 
 .logo {

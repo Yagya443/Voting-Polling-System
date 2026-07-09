@@ -43,10 +43,12 @@ const CreatePoll = () => {
                 },
             );
 
+            console.log(response);
+            
             setQuestion("");
             setOptions(["", ""]);
             setError(false);
-            navigate('/')
+            navigate(`/poll/${response.data.poll._id}`)
         } catch (error) {
             setError(true);
             console.log(error);
@@ -70,6 +72,7 @@ const CreatePoll = () => {
 
                 {options.map((option, index) => (
                     <div key={index} className={styles.optionRow}>
+                      <p> {index +1 } </p>
                         <input
                             type="text"
                             placeholder={`Option ${index + 1}`}
@@ -97,7 +100,7 @@ const CreatePoll = () => {
                         className={styles.addBtn}
                         onClick={addOption}
                     >
-                        + Add Option
+                        + Add Option({options.length}/{4})
                     </button>
                 )}
                 {error && (

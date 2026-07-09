@@ -8,11 +8,7 @@ const OptionSchema = new mongoose.Schema({
     voters: {
         type: Number,
         default: 0,
-    },
-    totalVotes: {
-        type: Number,
-        default: 0,
-    },
+    }
 });
 const PollSchema = new mongoose.Schema(
     {
@@ -27,6 +23,10 @@ const PollSchema = new mongoose.Schema(
                 validator: (e) => e.length > 1 && e.length < 5,
                 message: "A Poll Must Have Between 2 to 4 Options",
             },
+        },
+        totalVotes: {
+            type: Number,
+            default: 0,
         },
     },
     {
