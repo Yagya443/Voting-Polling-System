@@ -14,17 +14,18 @@ const PollModel = require("./src/Model/Poll.model.js");
 
 const io = new Server(httpServer, {
     cors: {
-        origin: "http://localhost:5173/",
+        origin: "http://localhost:5173",
     },
 });
-app.use(cors({
-    origin: "http://localhost:5173",
-}));
+app.use(
+    cors({
+        origin: "http://localhost:5173",
+    }),
+);
 
 app.use(express.json());
 app.use("/api", pollRoute);
 connectDB();
-
 
 io.on("connection", (socket) => {
     console.log(`client connected ${socket.id}`);
@@ -45,7 +46,6 @@ io.on("connection", (socket) => {
             await poll.save();
 
             io.to(pollId).emit("pollUpdated", poll);
-        
         } catch (error) {
             console.log("vote error by socket");
         }
