@@ -14,12 +14,12 @@ const PollModel = require("./src/Model/Poll.model.js");
 
 const io = new Server(httpServer, {
     cors: {
-        origin: "https://voting-polling-system-kappa.vercel.app/",
+        origin: "https://voting-polling-system-kappa.vercel.app",
     },
 });
 app.use(
     cors({
-        origin: "https://voting-polling-system-kappa.vercel.app/",
+        origin: "https://voting-polling-system-kappa.vercel.app",
     }),
 );
 
