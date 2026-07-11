@@ -36,7 +36,7 @@ const CreatePoll = () => {
 
         try {
             const response = await axios.post(
-                "http://localhost:5000/api/polls",
+                "https://voting-polling-system.onrender.com/api/polls",
                 {
                     question,
                     options,

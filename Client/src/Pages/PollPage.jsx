@@ -10,6 +10,7 @@ const PollPage = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [hasVoted, setHasVoted] = useState(false);
+    // const [whatVoted, setWhatVoted] = useState(null);
 
     const navigate = useNavigate();
 
@@ -17,7 +18,7 @@ const PollPage = () => {
         setLoading(true);
         try {
             const response = await axios.get(
-                `http://localhost:5000/api/polls/${id}`,
+                `https://voting-polling-system.onrender.com/api/polls/${id}`,
             );
 
             console.log("Hello", response.data);
@@ -30,6 +31,7 @@ const PollPage = () => {
     };
 
     useEffect(() => {
+        // setWhatVoted(localStorage.getItem(`livepoll_voted_${id}`));
         fetchPollData();
     }, []);
 
@@ -71,8 +73,10 @@ const PollPage = () => {
     const handleVote = async (optionIndex) => {
         console.log("Done");
 
-        if (hasVoted) return console.log("Already done");
-
+        if (hasVoted) {
+            alert("Sorry, you have already voted.");
+            return;
+        }
         try {
             socket.emit("submitVote", {
                 pollId: id,
@@ -88,7 +92,10 @@ const PollPage = () => {
 
     return (
         <div className={styles.page}>
-            <button className={styles.previousPage} onClick={()=>navigate("/")}>
+            <button
+                className={styles.previousPage}
+                onClick={() => navigate("/")}
+            >
                 &#8592; Go Back
             </button>
             <div className={styles.card}>
@@ -100,11 +107,12 @@ const PollPage = () => {
                     {pollData?.options?.map((option, index) => (
                         <button
                             key={option._id}
-                            className={`${styles.option} ${hasVoted ? styles.voted : ""}`}
+                            className={`${styles.option} ${index == whatVoted ? styles.alreadyVoted : styles.voteCompleted}`}
                             onClick={() => handleVote(index)}
-                            disabled={hasVoted}
+                            // disabled={hasVoted}
                         >
                             <span>{option.text}</span>
+                            {/* {hasVoted ? <p>{option.voters}</p>:''} */}
                             <span>{option.voters} Votes</span>
                         </button>
                     ))}
@@ -118,6 +126,11 @@ const PollPage = () => {
                     )}
                 </div>
             </div>
+            {hasVoted && (
+                <p className={styles.conslusion}>
+                    Your Vote Has been recorded.. Thank You !!
+                </p>
+            )}
         </div>
     );
 };

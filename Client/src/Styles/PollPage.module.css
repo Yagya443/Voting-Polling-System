@@ -1,9 +1,11 @@
 .page {
-    min-height: 100vh;
+    min-height: 80vh;
     background-color: var(--background);
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
+    gap: 40px;
     /* padding: 30px; */
 }
 
@@ -12,7 +14,7 @@
     max-width: 700px;
     background: white;
     border-radius: 18px;
-    padding: 15px;
+    padding: 20px;
     /* box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08); */
 }
 
@@ -20,9 +22,9 @@
     display: inline-block;
     background: #4f46e5;
     color: white;
-    padding: 5px 10px;
+    padding: 2px 8px;
     border-radius: 6px;
-    font-size: 20px;
+    font-size:15px;
     margin-bottom: 10px;
 }
 
@@ -30,7 +32,7 @@
     font-size: 1.5rem;
     margin-bottom: 10px;
     color: #222;
-    line-height: 1.3;
+    /* line-height: 1.3; */
 }
 
 .options {
@@ -43,14 +45,17 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 18px 22px;
+    padding: 12px 18px;
     border: 2px solid #e8e8e8;
     border-radius: 12px;
     background: white;
     cursor: pointer;
     transition: 0.25s;
-    font-size: 17px;
-    font-weight: 500;
+    font-size: 25px;
+    font-weight: 300;
+    font-family: "Science Gothic", sans-serif;
+    height: 70px;
+
 }
 
 .option:hover {
@@ -58,14 +63,36 @@
     background: #f5f3ff;
     transform: translateY(-2px);
 }
-.voted:hover {
-    border-color: none;
+
+.alreadyVoted{
+    border:2px solid #4F46E5;
+}
+
+.alreadyVoted:hover{
+    border: 2px solid #4F46E5;
+}
+.voteCompleted:hover{
+    border: 2px solid #e8e8e8;
+}
+
+.alreadyVoted:hover ,
+.voteCompleted:hover 
+{
+    /* border-color: none; */
     background: none;
     transform: none;
 }
 
+/* .alreadyVoted span{
+    font-size: 20px;
+    padding: 5px 0 0px 5px;
+
+} */
+
+
+
 .footer {
-    margin-top: 28px;
+    margin-top: 8px;
     text-align: right;
     font-weight: 600;
     color: #666;
@@ -106,4 +133,27 @@
     display: flex;
     align-items: center;
     border-radius: 8px;
+    font-family: "Science Gothic", sans-serif;
+
+
 }
+
+.previousPage:hover{
+    cursor: pointer;
+}
+
+.conslusion{
+    min-width: 500px;
+    text-align: center;
+    padding: 10px 30px;
+    color: #4f46e5;
+    background-color: white;
+    border: 2px solid #4f46e5;
+    border-radius: 12px;
+    font-size: 20px;
+    text-transform: capitalize;
+}
+
+/* .votedBorder{
+    border: 2px solid #4f46e5;
+} */

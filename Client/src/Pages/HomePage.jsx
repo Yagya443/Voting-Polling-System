@@ -12,7 +12,7 @@ const HomePage = () => {
         setLoading(true);
 
         try {
-            const response = await axios.get("http://localhost:5000/api/polls");
+            const response = await axios.get("https://voting-polling-system.onrender.com/api/polls");
             setPolls(response.data);
         } catch (error) {
             setError(true);
