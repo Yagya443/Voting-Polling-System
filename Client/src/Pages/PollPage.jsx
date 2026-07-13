@@ -8,9 +8,9 @@ const PollPage = () => {
     const { id } = useParams();
     const [pollData, setPollData] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(false);
+    const [error, setError] = useState(null);
     const [hasVoted, setHasVoted] = useState(false);
-    // const [whatVoted, setWhatVoted] = useState(null);
+    const [whatVoted, setWhatVoted] = useState(null);
 
     const navigate = useNavigate();
 
@@ -31,7 +31,7 @@ const PollPage = () => {
     };
 
     useEffect(() => {
-        // setWhatVoted(localStorage.getItem(`livepoll_voted_${id}`));
+        setWhatVoted(localStorage.getItem(`livepoll_voted_${id}`));
         fetchPollData();
     }, []);
 
@@ -71,8 +71,6 @@ const PollPage = () => {
     }
 
     const handleVote = async (optionIndex) => {
-        console.log("Done");
-
         if (hasVoted) {
             alert("Sorry, you have already voted.");
             return;
@@ -84,6 +82,7 @@ const PollPage = () => {
             });
 
             localStorage.setItem(`livepoll_voted_${id}`, optionIndex);
+            setWhatVoted(optionIndex)
             setHasVoted(true);
         } catch (error) {
             setError("Unable to submit vote.");
